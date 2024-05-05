@@ -17,13 +17,13 @@
 
             <!-- BODY -->
             <section class="main-body">
-                <div class="post-list">
-                    <div class="post">
-                        <div class="post-content">
-                            <p class="post-title">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Odit
+                <postListComp>
+                    <postComp>
+                        <postContent>
+                            <postTitle>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Odit
                                 voluptatibus sed nam adipisci, consequuntur explicabo aperiam atque? Cum delectus
-                                blanditiis optio, ipsum, ullam vitae dolor ex nobis assumenda fugit maiores?</p>
-                            <p class="post-body">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam
+                                blanditiis optio, ipsum, ullam vitae dolor ex nobis assumenda fugit maiores?</postTitle>
+                            <postBody>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam
                                 ducimus ex placeat. Totam voluptatibus aspernatur illo cumque, consequatur similique
                                 nihil dolorem praesentium fugit dolorum. Pariatur molestias quidem nemo aliquid? In
                                 eaque, hic nihil nemo ex iure quia saepe. Sed harum sit dolore et, fuga blanditiis totam
@@ -31,14 +31,14 @@
                                 laboriosam molestias? Ad quae ab est quia inventore architecto unde quod ullam omnis
                                 quam? Sed odio quos eius facere quod exercitationem, qui aut ducimus, saepe repellendus
                                 aliquid numquam earum, nesciunt hic perferendis! Fugiat vitae nostrum totam ad quo rem
-                                temporibus voluptate, ex at.</p>
-                        </div>
+                                temporibus voluptate, ex at.</postBody>
+                        </postContent>
                         <div class="post-action">
                             <btnComp>Открыть</btnComp>
                             <btnComp style="margin-top: 10px">Удалить</btnComp>
                         </div>
-                    </div>
-                </div>
+                    </postComp>
+                </postListComp>
             </section>
 
         </div>
@@ -50,11 +50,21 @@
 import btnComp from '@/components/btnComp.vue';
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiMagnify } from '@mdi/js';
+import postListComp from '@/components/postListComp.vue';
+import postComp from '@/components/postComp.vue'
+import postContent from '@/components/postContent.vue'
+import postTitle from '@/components/postTitle.vue'
+import postBody from '@/components/postBody.vue'
 
 export default {
     components: {
         SvgIcon,
         btnComp,
+        postListComp,
+        postComp,
+        postContent,
+        postTitle,
+        postBody,
     },
     data() {
         return {
@@ -110,43 +120,6 @@ export default {
 .main-body {
     width: 100%;
     height: 90%;
-}
-
-.post-list {
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    padding: 1.2rem 2rem;
-}
-
-.post {
-    width: 100%;
-    height: 130px;
-    border: var(--border);
-    border-radius: 4px;
-    display: flex;
-}
-
-.post-content {
-    width: 90%;
-    height: 100%;
-    border-right: var(--border);
-    padding: 0.6rem 1.2rem;
-    overflow: hidden; 
-}
-
-.post-title {
-    font-weight: 600;
-    font-size: 21px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;    
-}
-.post-body {
-    font-size: 18px;
-    padding: 0.4rem 0.5rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .post-action {
