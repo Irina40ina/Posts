@@ -1,7 +1,11 @@
 <template>
     <div class="app">
         <div class="main-container">
-            <creationFormComp :isShow="isShowCreationForm" @close="isShowCreationForm = false"></creationFormComp>
+            <creationFormComp 
+            :isShow="isShowCreationForm" 
+            @close="isShowCreationForm = false"
+            @create-post="createPost"
+            ></creationFormComp>
             <!-- HEADER -->
             <section class="main-header">
                 <div class="input-block">
@@ -16,13 +20,13 @@
                 </div>
                 
                 <div class="action-block">
-                    <btnComp>Создать</btnComp>
+                    <btnComp @click="isShowCreationForm = true">Создать</btnComp>
                 </div>
             </section>
 
             <!-- BODY -->
             <section class="main-body">
-                <postListComp>
+                <postListComp :posts="posts">
                 </postListComp>
             </section>
 
@@ -49,8 +53,20 @@ export default {
         return {
             path: mdiMagnify,
             isShowCreationForm: true,
+            posts: [],
         }
     },
+    methods: {
+        createPost(data) {
+            this.posts.push({
+                userId: 1,
+                id: Date.now(),
+                title: data.title,
+                body: data.body,
+            })
+            this.isShowCreationForm = false
+        }
+    }
 }
 </script>
 
