@@ -1,11 +1,21 @@
 <template>
     <div class="app">
         <div class="main-container">
+            <!-- ФОРМА СОЗДАНИЯ ПОСТА -->
             <creationFormComp 
             :isShow="isShowCreationForm" 
             @close="isShowCreationForm = false"
             @create-post="createPost"
             ></creationFormComp>
+
+            <!-- ДИАЛОГОВОЕ ОКНО ПРОСМОТРА ПОСТА -->
+            <postDialogComp
+            :isShow="isShowPostDialog"
+            :post-data="postDataForView"
+            @close="isShowPostDialog = false"
+            :is-show-loading="isShowLoading"
+            ></postDialogComp>
+            
             <!-- HEADER -->
             <section class="main-header">
                 <div class="input-block">
@@ -26,7 +36,10 @@
 
             <!-- BODY -->
             <section class="main-body">
-                <postListComp :posts="posts">
+                <postListComp 
+                :posts="posts"
+                @open-dialog="openPostDialog"
+                >
                 </postListComp>
             </section>
 
@@ -41,6 +54,9 @@ import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiMagnify } from '@mdi/js';
 import postListComp from '@/components/postListComp.vue';
 import creationFormComp from './components/creationFormComp.vue';
+import postDialogComp from '@/components/postDialogComp.vue';
+import {getPosts, getPostById} from '@/api/index.js';
+
 
 export default {
     components: {
@@ -48,12 +64,16 @@ export default {
         btnComp,
         postListComp,
         creationFormComp,
+        postDialogComp,
     },
     data() {
         return {
             path: mdiMagnify,
-            isShowCreationForm: true,
+            isShowCreationForm: false,
+            isShowPostDialog: false,
             posts: [],
+            postDataForView: {},
+            isShowLoading: false,
         }
     },
     methods: {
@@ -63,8 +83,26 @@ export default {
                 id: Date.now(),
                 title: data.title,
                 body: data.body,
-            })
+            });
             this.isShowCreationForm = false
+        },
+        async openPostDialog(data) {
+            try {
+                this.isShowLoading = true;
+                this.isShowPostDialog = true;
+                this.postDataForView = await getPostById(data.id);
+            } catch (err) {
+                console.log(`App.vue: openPostDialog => ${err}`)
+            } finally {
+                this.isShowLoading = false;
+            }
+        },
+    },
+    async mounted() {
+        try {
+            this.posts = await getPosts();
+        } catch(err) {
+            console.error(`App.vue: mounted => ${err}`)
         }
     }
 }

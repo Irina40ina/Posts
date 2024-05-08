@@ -1,10 +1,10 @@
 <template>
     <div class="post-list">
         <postComp 
-        :title="post.title" 
-        :body="post.body"
+        :post-data="post"
         v-for="post in $props.posts"
         :key="post.id"
+        @open-dialog="(data) => $emit('openDialog', data)"
         >
         </postComp>
     </div>
@@ -21,6 +21,7 @@ export default {
         return {
         }
     },
+    emits: ['openDialog'],
     props: {
         posts: {
             type: Array,
@@ -31,7 +32,6 @@ export default {
 }
 
 </script>
-
 
 <style scoped>
 .post-list {
