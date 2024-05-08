@@ -1,10 +1,10 @@
 <template>
     <div class="post-list">
         <postComp 
-        :title="'Title Post'" 
-        :body="'Text of post'" 
-        v-for="item in posts" 
-        :key="item"
+        :title="post.title" 
+        :body="post.body"
+        v-for="post in $props.posts"
+        :key="post.id"
         >
         </postComp>
     </div>
@@ -19,9 +19,15 @@ export default {
     },
     data() {
         return {
-            posts: []
         }
     },
+    props: {
+        posts: {
+            type: Array,
+            default: () => [],
+            required: true,
+        },
+    }
 }
 
 </script>
