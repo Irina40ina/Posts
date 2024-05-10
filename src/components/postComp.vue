@@ -2,15 +2,15 @@
     <div class="post">
         <div class="post-content">
             <p class="post-title">
-                {{ title }}
+                {{ $props.postData.title }}
             </p>
             <p class="post-body">
-                {{ body }}
+                {{ $props.postData.body }}
             </p>
         </div>
         <div class="post-action">
 
-            <btnComp>Открыть</btnComp>
+            <btnComp @click="handlerOpenDialog">Открыть</btnComp>
             <btnComp style="margin-top: 10px">Удалить</btnComp>
         </div>
     </div>
@@ -21,11 +21,18 @@
 import btnComp from '@/components/btnComp.vue';
 export default {
     props: {
-        title: String,
-        body: String,
+        postData: {
+            type: Object,
+        }
     },
     components: {
         btnComp,
+    },
+    emits: ['openDialog'],
+    methods: {
+        handlerOpenDialog() {
+            this.$emit('openDialog', this.$props.postData);
+        }
     },
 }
 </script>
