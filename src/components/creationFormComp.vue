@@ -1,7 +1,7 @@
 <template>
     <div 
     class="creation-form__dialog" 
-    v-if="isShow" 
+    v-if="$props.isShow" 
     @click="$emit('close')"
     >
         <form

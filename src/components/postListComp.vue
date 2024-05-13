@@ -5,6 +5,7 @@
         v-for="post in $props.posts"
         :key="post.id"
         @open-dialog="(data) => $emit('openDialog', data)"
+        @open-delete-dialog="(data) => $emit('openDeleteDialog', data)"
         >
         </postComp>
     </div>
@@ -21,7 +22,7 @@ export default {
         return {
         }
     },
-    emits: ['openDialog'],
+    emits: ['openDialog', 'openDeleteDialog'],
     props: {
         posts: {
             type: Array,

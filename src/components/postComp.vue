@@ -11,7 +11,7 @@
         <div class="post-action">
 
             <btnComp @click="handlerOpenDialog">Открыть</btnComp>
-            <btnComp style="margin-top: 10px">Удалить</btnComp>
+            <btnComp @click="handlerDeleteDialog" style="margin-top: 10px">Удалить</btnComp>
         </div>
     </div>
 </template>
@@ -28,10 +28,13 @@ export default {
     components: {
         btnComp,
     },
-    emits: ['openDialog'],
+    emits: ['openDialog', 'openDeleteDialog'],
     methods: {
         handlerOpenDialog() {
             this.$emit('openDialog', this.$props.postData);
+        },
+        handlerDeleteDialog() {
+            this.$emit('openDeleteDialog', this.$props.postData);
         }
     },
 }

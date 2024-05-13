@@ -9,6 +9,20 @@ import axios from 'axios';
  D - delete
 */
 
+//Получение всех постов
+async function getAllPosts() {
+    try {
+        const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+        });
+        return response.data;
+    } catch (err) {
+        console.error(`api/index.js: getAllPosts  => ${err}`);
+    }
+}
+
 // Получение постов
 async function getPosts() {
     try {
@@ -41,4 +55,5 @@ async function getPostById(id) {
 export {
     getPosts,
     getPostById,
+    getAllPosts,
 }
