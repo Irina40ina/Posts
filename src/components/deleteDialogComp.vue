@@ -11,6 +11,7 @@
         >
             <div class="deletion-window-header">
                 <p>Хотите удалить пост?</p>
+                
             </div>
             <div class="deletion-window-actions">
                 <btnComp @click="$emit('deletePost')">Да</btnComp>
@@ -33,6 +34,9 @@ export default {
             default: false,
             required: true,
         },
+        postData: {
+            type: Object,
+        }
     },
     emits: ['close', 'deletePost'],
 }

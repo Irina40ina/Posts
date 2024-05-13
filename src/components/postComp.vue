@@ -2,7 +2,7 @@
     <div class="post">
         <div class="post-content">
             <p class="post-title">
-                {{ $props.postData.title }}
+                {{$props.postData.id }} {{ $props.postData.title }}
             </p>
             <p class="post-body">
                 {{ $props.postData.body }}

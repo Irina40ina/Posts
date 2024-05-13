@@ -18,6 +18,7 @@
 
             <deleteDialogComp
             :isShow="isShowDeleteDialog"
+            :post-data="postDataForDelete"
             @close="isShowDeleteDialog = false"
             @delete-post="deletePostFunction"
             >
@@ -30,10 +31,18 @@
                     class="search-input" 
                     type="text" 
                     placeholder="Поиск..."
-                    @input="(event) => searchPost(event.target.value)"
+                    v-model="searchField"
+                    @input="handlerSearchInput"
                     >
-                    <btnComp>
-                        <SvgIcon class="icon" type="mdi" :path="path"></SvgIcon>
+
+                    <!-- Поиск кнопка -->
+                    <btnComp >
+                        <SvgIcon 
+                        class="icon" 
+                        @click="searchPost"
+                        type="mdi" 
+                        :path="path"
+                        ></SvgIcon>
                     </btnComp>
                 </div>
                 
@@ -48,6 +57,7 @@
                 :posts="posts"
                 @open-dialog="openPostDialog"
                 @open-delete-dialog="openDeleteDialog"
+                @page-next="loadingPageNext"
                 >
                 </postListComp>
             </section>
@@ -64,9 +74,8 @@ import { mdiMagnify } from '@mdi/js';
 import postListComp from '@/components/postListComp.vue';
 import creationFormComp from './components/creationFormComp.vue';
 import postDialogComp from '@/components/postDialogComp.vue';
-import {getPosts, getPostById, getAllPosts} from '@/api/index.js';
+import {getPosts, getPostById} from '@/api/index.js';
 import deleteDialogComp from '@/components/deleteDialogComp.vue';
-
 
 export default {
     components: {
@@ -85,9 +94,12 @@ export default {
             isShowDeleteDialog: false,
             posts: [],
             arrPosts: [],
-            postDataForView: {},
+            postDataForView: null,
+            postDataForDelete: null,
             isShowLoading: false,
             indexDeletedPost: '',
+            searchField: '',
+            page: 1,
         }
     },
     methods: {
@@ -114,37 +126,56 @@ export default {
         openDeleteDialog(data) {
             try {
                 this.isShowDeleteDialog = true;
-                this.indexDeletedPost = this.posts.findIndex(element => element.id == data.id);
+                this.postDataForDelete = data;
             } catch (err) {
                 console.err(`App.vue: openDeleteDialog => ${err}`)
             }
         },
         deletePostFunction() {
             try {
-                this.posts.splice(this.indexDeletedPost, 1);
+                this.posts = this.posts.filter((element) => element.id !== this.postDataForDelete.id);
                 this.isShowDeleteDialog = false;
             } catch (err) {
-                console.err(`App.vue: deletePostFunction => ${err}`)
+                console.err(`App.vue: deletePostFunction => ${err}`);
             }
         },
-        async searchPost(text) {
+        async searchPost() {
             try {
-               this.posts = [];
-            this.arrPosts = await getAllPosts();
-            this.arrPosts.forEach((element) => {
-                if(element.title.toLowerCase().includes(text.toLowerCase())){
-                    this.posts.push(element);
-                }
-            }) 
+                const fetchedPosts = await getPosts(100);
+                this.posts = fetchedPosts.filter((element) => {
+                    if (element.title.toLowerCase().includes(this.searchField.toLowerCase())) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
             } catch (err) {
                 console.err(`App.vue: searchPost => ${err}`)
             }
+        },
+        async handlerSearchInput() {
+            try {
+                if(this.searchField === '') {
+                    this.posts = await getPosts(10);
+                }
+            } catch (err) {
+                console.err(`App.vue: handlerSearchInput => ${err}`);
             }
         },
+        async loadingPageNext() {
+            try {
+                this.page += 1;
+                let posts = await getPosts(10, this.page);
+                this.posts = [...this.posts, ...posts];
+            } catch (err) {
+                console.error(`App.vue: loadingPageNext => ${err}`)
+            }
+        }
+    },
     async mounted() {
         try {
-            this.posts = await getPosts();
-        } catch(err) {
+            this.posts = await getPosts(10, this.page);
+        } catch (err) {
             console.error(`App.vue: mounted => ${err}`)
         }
     },
