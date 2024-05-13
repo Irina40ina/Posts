@@ -140,9 +140,9 @@ export default {
 .item-key {
     border-bottom: var(--border);
 }
-.item-value {
+/* .item-value {
     
-}
+} */
 .postDialog-actions {
     width: 100%;
     height: 10%;
