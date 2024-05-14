@@ -8,7 +8,11 @@
         @open-delete-dialog="(data) => $emit('openDeleteDialog', data)"
         >
         </postComp>
-        <div class="triggerPagination" ref="triggerPagination">
+        <div 
+        class="triggerPagination" 
+        ref="triggerPagination"
+        v-if="$props.searchField.length <= 0 && $props.searchId.length <= 0"
+        >
             <AnOutlinedLoading class="circle"></AnOutlinedLoading>
         </div>
     </div>
@@ -34,6 +38,16 @@ export default {
             default: () => [],
             required: true,
         },
+        searchField: {
+            type: String,
+            default: '',
+            required: false,
+        },
+        searchId: {
+            type: String,
+            default: '',
+            required: false,
+        }
     },
     mounted() {
         const options = {
@@ -42,6 +56,7 @@ export default {
         };
         const callback = (entries) => {
             if(entries[0].isIntersecting === true && this.$props.posts.length > 0) {
+                console.log('work');
                 this.$emit('pageNext');
             }
             /* Content excerpted, show below */

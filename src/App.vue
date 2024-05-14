@@ -30,9 +30,18 @@
                     <input 
                     class="search-input" 
                     type="text" 
-                    placeholder="Поиск..."
+                    placeholder="Поиск Title..."
                     v-model="searchField"
                     @input="handlerSearchInput"
+                    @focus="uploadPosts"
+                    >
+                    <input 
+                    class="search-input" 
+                    type="text" 
+                    placeholder="Поиск ID..."
+                    v-model="searchId"
+                    @input="handlerSearchInput"
+                    @focus="uploadPosts"
                     >
 
                     <!-- Поиск кнопка -->
@@ -54,10 +63,11 @@
             <!-- BODY -->
             <section class="main-body">
                 <postListComp 
-                :posts="posts"
+                :posts="filteredById"
                 @open-dialog="openPostDialog"
                 @open-delete-dialog="openDeleteDialog"
                 @page-next="loadingPageNext"
+                :search-field="searchField"
                 >
                 </postListComp>
             </section>
@@ -95,11 +105,13 @@ export default {
             posts: [],
             arrPosts: [],
             postDataForView: null,
-            postDataForDelete: null,
+            postDataForDelete: {},
             isShowLoading: false,
             indexDeletedPost: '',
             searchField: '',
+            searchId: '',
             page: 1,
+            searchPosts: [],
         }
     },
     methods: {
@@ -139,20 +151,6 @@ export default {
                 console.err(`App.vue: deletePostFunction => ${err}`);
             }
         },
-        async searchPost() {
-            try {
-                const fetchedPosts = await getPosts(100);
-                this.posts = fetchedPosts.filter((element) => {
-                    if (element.title.toLowerCase().includes(this.searchField.toLowerCase())) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-            } catch (err) {
-                console.err(`App.vue: searchPost => ${err}`)
-            }
-        },
         async handlerSearchInput() {
             try {
                 if(this.searchField === '') {
@@ -170,6 +168,31 @@ export default {
             } catch (err) {
                 console.error(`App.vue: loadingPageNext => ${err}`)
             }
+        },
+        async uploadPosts() {
+            this.searchPosts = await getPosts(100, 1);
+        }
+    },
+    computed: {
+        searchPost() {
+            return this.posts.filter((element) => {
+                element
+                if (element.title.toLowerCase().includes(this.searchField.toLowerCase())) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        },
+        filteredById() {
+            return this.searchPost.filter((element) => {
+                let currentId = element.id + ''
+                if (currentId.includes(this.searchId)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
         }
     },
     async mounted() {

@@ -1,41 +1,41 @@
 <template>
     <div 
     class="postDialog-container"
-    v-if="$props.isShow"
+    v-show="$props.isShow"
     >
         <div class="postDialog">
             <!-- LOADING -->
             <div class="loading-container"
-            v-if="$props.isShowLoading"
+            v-show="$props.isShowLoading"
             ><p>Загрузка...</p></div>
 
             <div class="postDialog-header">
-                <h2 class="header-title">Post {{$props.postData.id}}</h2>
+                <h2 class="header-title">Post {{$props.postData?.id}}</h2>
             </div>
             <div class="postDialog-body">
 
                 <!-- ID -->
                 <div class="body-item">
                     <p class="item-key">ID: </p>
-                    <p class="item-value">{{$props.postData.id}}</p>
+                    <p class="item-value">{{$props.postData?.id}}</p>
                 </div>
 
                 <!-- USER ID -->
                 <div class="body-item">
                     <p class="item-key">User ID:</p>
-                    <p class="item-value">{{$props.postData.userId}}</p>
+                    <p class="item-value">{{$props.postData?.userId}}</p>
                 </div>
 
                 <!-- TITLE -->
                 <div class="body-item">
                     <p class="item-key">Title:</p>
-                    <p class="item-value">{{$props.postData.title}}</p>
+                    <p class="item-value">{{$props.postData?.title}}</p>
                 </div>
 
                 <!-- BODY -->
                 <div class="body-item">
                     <p class="item-key">Body:</p>
-                    <p class="item-value">{{$props.postData.body}}</p>
+                    <p class="item-value">{{$props.postData?.body}}</p>
                 </div>
 
             </div>
@@ -61,7 +61,7 @@ export default {
         },
         postData: {
             type: Object,
-            required: true,
+            required: false,
         },
         isShowLoading: {
             type: Boolean,
