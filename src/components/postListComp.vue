@@ -8,16 +8,20 @@
         @open-delete-dialog="(data) => $emit('openDeleteDialog', data)"
         >
         </postComp>
-        <div class="triggerPagination" ref="triggerPagination"></div>
+        <div class="triggerPagination" ref="triggerPagination">
+            <AnOutlinedLoading class="circle"></AnOutlinedLoading>
+        </div>
     </div>
 </template>
 
 
 <script>
 import postComp from '@/components/postComp.vue'
+import { AnOutlinedLoading } from "@kalimahapps/vue-icons";
 export default {
     components: {
         postComp,
+        AnOutlinedLoading,
     },
     data() {
         return {
@@ -62,7 +66,21 @@ export default {
 .triggerPagination {
     width: 100%;
     height: 40px;
-    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
     margin-top: 0.5rem;
+}
+.circle {
+    animation: 2s linear infinite rotate;
+}
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 </style>
