@@ -20,7 +20,7 @@
 
 
 <script>
-import postComp from '@/components/postComp.vue'
+import postComp from '@/components/postComp.vue';
 import { AnOutlinedLoading } from "@kalimahapps/vue-icons";
 export default {
     components: {

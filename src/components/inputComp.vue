@@ -10,6 +10,7 @@
 
 <script>
 export default {
+    name: 'inputComp',
     props: ['modelValue', 'placeholder'],
     emits: ['update:modelValue'],
 }
@@ -17,6 +18,6 @@ export default {
 
 <style>
     .input {
-    
+        color: red;
     }
 </style>

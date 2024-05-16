@@ -9,7 +9,6 @@
             </p>
         </div>
         <div class="post-action">
-
             <btnComp @click="handlerOpenDialog">Открыть</btnComp>
             <btnComp @click="handlerDeleteDialog" style="margin-top: 10px">Удалить</btnComp>
         </div>
@@ -18,15 +17,12 @@
 
 
 <script>
-import btnComp from '@/components/btnComp.vue';
 export default {
+    name: 'postComp',
     props: {
         postData: {
             type: Object,
         }
-    },
-    components: {
-        btnComp,
     },
     emits: ['openDialog', 'openDeleteDialog'],
     methods: {

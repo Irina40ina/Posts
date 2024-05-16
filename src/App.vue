@@ -43,16 +43,10 @@
                     @input="handlerSearchInput"
                     @focus="uploadPosts"
                     >
-
-                    <!-- Поиск кнопка -->
-                    <btnComp >
-                        <SvgIcon 
-                        class="icon" 
-                        @click="searchPost"
-                        type="mdi" 
-                        :path="path"
-                        ></SvgIcon>
-                    </btnComp>
+                    <selectSortedComp
+                    :options="selectedOptions"
+                    v-model="selectedSorted"
+                    ></selectSortedComp>
                 </div>
                 
                 <div class="action-block">
@@ -63,7 +57,7 @@
             <!-- BODY -->
             <section class="main-body">
                 <postListComp 
-                :posts="filteredById"
+                :posts="sortedPosts"
                 @open-dialog="openPostDialog"
                 @open-delete-dialog="openDeleteDialog"
                 @page-next="loadingPageNext"
@@ -79,22 +73,22 @@
 
 <script>
 import btnComp from '@/components/btnComp.vue';
-import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiMagnify } from '@mdi/js';
 import postListComp from '@/components/postListComp.vue';
 import creationFormComp from './components/creationFormComp.vue';
 import postDialogComp from '@/components/postDialogComp.vue';
 import {getPosts, getPostById} from '@/api/index.js';
 import deleteDialogComp from '@/components/deleteDialogComp.vue';
+import selectSortedComp from '@/components/selectSortedComp.vue';
 
 export default {
     components: {
-        SvgIcon,
         btnComp,
         postListComp,
         creationFormComp,
         postDialogComp,
         deleteDialogComp,
+        selectSortedComp,
     },
     data() {
         return {
@@ -112,6 +106,11 @@ export default {
             searchId: '',
             page: 1,
             searchPosts: [],
+            selectedOptions: [
+                {value: 'title', title: 'Сортировка по названию'}, 
+                {value: 'body', title: 'Сортировка по описанию'}
+            ],
+            selectedSorted: '',
         }
     },
     methods: {
@@ -193,7 +192,12 @@ export default {
                     return false;
                 }
             });
-        }
+        },
+        sortedPosts() {
+            return [...this.filteredById].sort((post1, post2) => {
+               return post1[this.selectedSorted]?.localeCompare(post2[this.selectedSorted]);
+            });
+        },
     },
     async mounted() {
         try {
@@ -205,7 +209,6 @@ export default {
 }
 </script>
 
-,
 <style>
 * {
     margin: 0;

@@ -26,13 +26,7 @@
 </template>
 
 <script>
-import btnComp from './btnComp.vue';
-import inputComp from '@/components/inputComp.vue'
 export default {
-    components: {
-        btnComp,
-        inputComp,
-    },
     data() {
         return {
             title: "",
