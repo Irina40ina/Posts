@@ -68,6 +68,12 @@
             </section>
 
         </div>
+        <paginationBlock 
+        @select-page="loadingPageNext"
+        :page-number="page"
+        :page-count="totalCountPage"
+        :current-page="currentPage"
+        />
     </div>
 </template>
 
@@ -105,10 +111,13 @@ export default {
             searchField: '',
             searchId: '',
             page: 1,
+            limit: 10,
+            totalCountPage: 0,
+            currentPage: 1,
             searchPosts: [],
             selectedOptions: [
                 {value: 'title', title: 'Сортировка по названию'}, 
-                {value: 'body', title: 'Сортировка по описанию'}
+                {value: 'body', title: 'Сортировка по описанию'},
             ],
             selectedSorted: '',
         }
@@ -153,18 +162,35 @@ export default {
         async handlerSearchInput() {
             try {
                 if(this.searchField === '') {
-                    this.posts = await getPosts(10);
+                    this.posts = await getPosts(this.limit);
                 }
             } catch (err) {
                 console.err(`App.vue: handlerSearchInput => ${err}`);
             }
         },
-        async loadingPageNext() {
+
+        // ДЛЯ БЕСКОНЕЧНОЙ ЛЕНТЫ
+        // async loadingPageNext() {
+        //     try {
+        //         this.isShowUploadPosts = true;
+        //         this.page += 1;
+        //         let posts = await getPosts(this.limit, this.page);
+        //         this.posts = [...this.posts, ...posts];
+        //     } catch (err) {
+        //         console.error(`App.vue: loadingPageNext => ${err}`)
+        //     } finally {
+        //         this.isShowUploadPosts = false;
+        //     }
+        // },
+
+        // ДЛЯ ПОСТРАНИЧНОГО ВЫВОДА ПОСТОВ
+        async loadingPageNext(value) {
             try {
                 this.isShowUploadPosts = true;
-                this.page += 1;
-                let posts = await getPosts(10, this.page);
-                this.posts = [...this.posts, ...posts];
+                this.page = value;
+                this.currentPage = value;
+                const response = await getPosts(this.limit, this.page);
+                this.posts = response.data;
             } catch (err) {
                 console.error(`App.vue: loadingPageNext => ${err}`)
             } finally {
@@ -184,35 +210,59 @@ export default {
     },
     computed: {
         searchPost() {
-            return this.posts.filter((element) => {
-                element
-                if (element.title.toLowerCase().includes(this.searchField.toLowerCase())) {
-                    return true;
-                } else {
-                    return false;
-                }
-            });
+            let result;
+            try {
+                result = this.posts.filter((element) => {
+                    element
+                    if (element.title.toLowerCase().includes(this.searchField.toLowerCase())) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+            } catch (err) {
+                console.error(`App.vue: computed[searchPost]  => ${err}`)
+            }
+            return result;
+
         },
         filteredById() {
-            return this.searchPost.filter((element) => {
-                let currentId = element.id + ''
-                if (currentId.includes(this.searchId)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            });
+            let result;
+            try {
+                result = this.searchPost.filter((element) => {
+                    let currentId = element.id + ''
+                    if (currentId.includes(this.searchId)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+            } catch (err) {
+                console.error(`App.vue: computed[filteredById]  => ${err}`)
+            }
+            return result;
+
         },
         sortedPosts() {
-            return [...this.filteredById].sort((post1, post2) => {
-               return post1[this.selectedSorted]?.localeCompare(post2[this.selectedSorted]);
-            });
+            let result;
+            try {
+                result = [...this.filteredById].sort((post1, post2) => {
+                    return post1[this.selectedSorted]?.localeCompare(post2[this.selectedSorted]);
+                });
+            } catch (err) {
+                console.error(`App.vue: computed[sortedPosts]  => ${err}`)
+            }
+            return result;
+
         },
     },
     async mounted() {
         try {
             this.isShowUploadPosts = true;
-            this.posts = await getPosts(10, this.page);
+            let response = await getPosts(this.limit, this.page);
+            this.posts = response.data;
+            let totalCount = response.xTotalCount;
+            this.totalCountPage = Math.ceil(totalCount / this.limit);
         } catch (err) {
             console.error(`App.vue: mounted => ${err}`)
         } finally {
@@ -239,8 +289,10 @@ export default {
     width: 100%;
     height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
 .icon {
@@ -254,6 +306,7 @@ export default {
     flex-direction: column;
     border: var(--border);
     border-radius: 4px;
+    overflow: hidden;
 }
 
 .main-header {
@@ -267,6 +320,7 @@ export default {
 .main-body {
     width: 100%;
     height: 90%;
+    overflow: hidden;
 }
 
 .input-block {
