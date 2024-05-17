@@ -1,21 +1,23 @@
 <template>
     <div class="post-list">
         <TransitionGroup name="list">
-        <postComp 
-        :post-data="post"
-        v-for="post in $props.posts"
-        :key="post.id"
-        @open-dialog="(data) => $emit('openDialog', data)"
-        @open-delete-dialog="(data) => $emit('openDeleteDialog', data)"
-        >
-        </postComp>
-        <div 
-        class="triggerPagination" 
-        ref="triggerPagination"
-        v-if="$props.searchField.length <= 0 && $props.searchId.length <= 0"
-        >
-            <AnOutlinedLoading class="circle"></AnOutlinedLoading>
-        </div>
+            <postComp 
+            :post-data="post"
+            v-for="post in $props.posts"
+            :key="post.id"
+            @open-dialog="(data) => $emit('openDialog', data)"
+            @open-delete-dialog="(data) => $emit('openDeleteDialog', data)"
+            >
+            </postComp>
+            <div 
+            class="triggerPagination" 
+            ref="triggerPagination"
+            >
+                <AnOutlinedLoading
+                class="circle"
+                v-show="computedShowLoading" 
+                ></AnOutlinedLoading>
+            </div>
         </TransitionGroup>
     </div>
 </template>
@@ -49,6 +51,17 @@ export default {
             type: String,
             default: '',
             required: false,
+        },
+        isShowLoading: {
+            type: Boolean,
+            default: false,
+            required: false,
+        }
+    },
+    computed: {
+        computedShowLoading() {
+            // this.$props.searchField.length <= 0 && this.$props.searchId.length <= 0 || 
+            return this.$props.isShowLoading === true;
         }
     },
     mounted() {
@@ -63,8 +76,7 @@ export default {
             /* Content excerpted, show below */
         };
         const observer = new IntersectionObserver(callback, options);
-        
-        observer.observe(this.$refs.triggerPagination)
+        observer.observe(this.$refs.triggerPagination);
     }
 
 

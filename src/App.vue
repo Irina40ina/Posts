@@ -61,6 +61,7 @@
                 @open-dialog="openPostDialog"
                 @open-delete-dialog="openDeleteDialog"
                 @page-next="loadingPageNext"
+                :is-show-loading="isShowUploadPosts"
                 :search-field="searchField"
                 >
                 </postListComp>
@@ -72,10 +73,9 @@
 
 
 <script>
-import btnComp from '@/components/btnComp.vue';
 import { mdiMagnify } from '@mdi/js';
 import postListComp from '@/components/postListComp.vue';
-import creationFormComp from './components/creationFormComp.vue';
+import creationFormComp from '@/components/creationFormComp.vue';
 import postDialogComp from '@/components/postDialogComp.vue';
 import {getPosts, getPostById} from '@/api/index.js';
 import deleteDialogComp from '@/components/deleteDialogComp.vue';
@@ -83,7 +83,6 @@ import selectSortedComp from '@/components/selectSortedComp.vue';
 
 export default {
     components: {
-        btnComp,
         postListComp,
         creationFormComp,
         postDialogComp,
@@ -101,6 +100,7 @@ export default {
             postDataForView: null,
             postDataForDelete: {},
             isShowLoading: false,
+            isShowUploadPosts: false,
             indexDeletedPost: '',
             searchField: '',
             searchId: '',
@@ -161,15 +161,25 @@ export default {
         },
         async loadingPageNext() {
             try {
+                this.isShowUploadPosts = true;
                 this.page += 1;
                 let posts = await getPosts(10, this.page);
                 this.posts = [...this.posts, ...posts];
             } catch (err) {
                 console.error(`App.vue: loadingPageNext => ${err}`)
+            } finally {
+                this.isShowUploadPosts = false;
             }
         },
         async uploadPosts() {
-            this.searchPosts = await getPosts(100, 1);
+            try {
+                this.isShowUploadPosts = true;
+                this.searchPosts = await getPosts(100, 1);
+            } catch (err) {
+                console.error(`App.vue: uploadPosts => ${err}`)
+            } finally {
+                this.isShowUploadPosts = false;
+            }
         }
     },
     computed: {
@@ -201,9 +211,12 @@ export default {
     },
     async mounted() {
         try {
+            this.isShowUploadPosts = true;
             this.posts = await getPosts(10, this.page);
         } catch (err) {
             console.error(`App.vue: mounted => ${err}`)
+        } finally {
+            this.isShowUploadPosts = false;
         }
     },
 }
