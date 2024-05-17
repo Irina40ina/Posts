@@ -13,7 +13,11 @@ import axios from 'axios';
 // Получение постов
 async function getPosts(limit, page) {
     try {
-        const response = await axios.get(`https://jsonplaceholder.typicode.com/posts?_limit=${limit}&_page=${page}`, {
+        const response = await axios.get(`https://jsonplaceholder.typicode.com/posts`, {
+            params: {
+                _limit: limit,
+                _page: page,
+            },
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             }

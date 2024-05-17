@@ -30,20 +30,23 @@
                     <input 
                     class="search-input" 
                     type="text" 
-                    placeholder="Поиск..."
+                    placeholder="Поиск Title..."
                     v-model="searchField"
                     @input="handlerSearchInput"
+                    @focus="uploadPosts"
                     >
-
-                    <!-- Поиск кнопка -->
-                    <btnComp >
-                        <SvgIcon 
-                        class="icon" 
-                        @click="searchPost"
-                        type="mdi" 
-                        :path="path"
-                        ></SvgIcon>
-                    </btnComp>
+                    <input 
+                    class="search-input" 
+                    type="text" 
+                    placeholder="Поиск ID..."
+                    v-model="searchId"
+                    @input="handlerSearchInput"
+                    @focus="uploadPosts"
+                    >
+                    <selectSortedComp
+                    :options="selectedOptions"
+                    v-model="selectedSorted"
+                    ></selectSortedComp>
                 </div>
                 
                 <div class="action-block">
@@ -54,10 +57,11 @@
             <!-- BODY -->
             <section class="main-body">
                 <postListComp 
-                :posts="posts"
+                :posts="sortedPosts"
                 @open-dialog="openPostDialog"
                 @open-delete-dialog="openDeleteDialog"
                 @page-next="loadingPageNext"
+                :search-field="searchField"
                 >
                 </postListComp>
             </section>
@@ -69,22 +73,22 @@
 
 <script>
 import btnComp from '@/components/btnComp.vue';
-import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiMagnify } from '@mdi/js';
 import postListComp from '@/components/postListComp.vue';
 import creationFormComp from './components/creationFormComp.vue';
 import postDialogComp from '@/components/postDialogComp.vue';
 import {getPosts, getPostById} from '@/api/index.js';
 import deleteDialogComp from '@/components/deleteDialogComp.vue';
+import selectSortedComp from '@/components/selectSortedComp.vue';
 
 export default {
     components: {
-        SvgIcon,
         btnComp,
         postListComp,
         creationFormComp,
         postDialogComp,
         deleteDialogComp,
+        selectSortedComp,
     },
     data() {
         return {
@@ -95,11 +99,18 @@ export default {
             posts: [],
             arrPosts: [],
             postDataForView: null,
-            postDataForDelete: null,
+            postDataForDelete: {},
             isShowLoading: false,
             indexDeletedPost: '',
             searchField: '',
+            searchId: '',
             page: 1,
+            searchPosts: [],
+            selectedOptions: [
+                {value: 'title', title: 'Сортировка по названию'}, 
+                {value: 'body', title: 'Сортировка по описанию'}
+            ],
+            selectedSorted: '',
         }
     },
     methods: {
@@ -139,20 +150,6 @@ export default {
                 console.err(`App.vue: deletePostFunction => ${err}`);
             }
         },
-        async searchPost() {
-            try {
-                const fetchedPosts = await getPosts(100);
-                this.posts = fetchedPosts.filter((element) => {
-                    if (element.title.toLowerCase().includes(this.searchField.toLowerCase())) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-            } catch (err) {
-                console.err(`App.vue: searchPost => ${err}`)
-            }
-        },
         async handlerSearchInput() {
             try {
                 if(this.searchField === '') {
@@ -170,7 +167,37 @@ export default {
             } catch (err) {
                 console.error(`App.vue: loadingPageNext => ${err}`)
             }
+        },
+        async uploadPosts() {
+            this.searchPosts = await getPosts(100, 1);
         }
+    },
+    computed: {
+        searchPost() {
+            return this.posts.filter((element) => {
+                element
+                if (element.title.toLowerCase().includes(this.searchField.toLowerCase())) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        },
+        filteredById() {
+            return this.searchPost.filter((element) => {
+                let currentId = element.id + ''
+                if (currentId.includes(this.searchId)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        },
+        sortedPosts() {
+            return [...this.filteredById].sort((post1, post2) => {
+               return post1[this.selectedSorted]?.localeCompare(post2[this.selectedSorted]);
+            });
+        },
     },
     async mounted() {
         try {
@@ -182,7 +209,6 @@ export default {
 }
 </script>
 
-,
 <style>
 * {
     margin: 0;
