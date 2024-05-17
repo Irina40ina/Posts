@@ -1,4 +1,5 @@
 <template>
+    <Transition name="animation">
     <div 
     class="deletion-container"
     @click="$emit('close')"
@@ -14,20 +15,17 @@
                 
             </div>
             <div class="deletion-window-actions">
-                <btnComp @click="$emit('deletePost')">Да</btnComp>
-                <btnComp @click="$emit('close')">Нет</btnComp>
+                <btnComp class="deletion-actions-btn" @click="$emit('deletePost')">Да</btnComp>
+                <btnComp class="deletion-actions-btn" @click="$emit('close')">Нет</btnComp>
             </div>
         </div>
     </div>
+    </Transition>
 </template>
 
 
 <script>
-import btnComp from '@/components/btnComp.vue'
 export default {
-    components: {
-        btnComp,
-    },
     props: {
         isShow: {
             type: Boolean,
@@ -44,6 +42,14 @@ export default {
 
 
 <style scoped>
+    .animation-enter-active,
+    .animation-leave-active {
+    transition: opacity 0.5s ease;
+    }
+    .animation-enter-from,
+    .animation-leave-to {
+    opacity: 0;
+    }
     .deletion-container{
         position: fixed;
         display: flex;
@@ -57,8 +63,8 @@ export default {
     }
     .deletion-window{
         position: relative;
-        width: 500px;
-        height: 50vh;
+        width: 400px;
+        height: 40vh;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -68,9 +74,18 @@ export default {
         border-radius: 5px;
         overflow: hidden; 
     }
+    .deletion-window-header {
+        margin-bottom: .5rem;
+    }
+    .deletion-window-header p {
+        font-size: 25px;
+    }
     .deletion-window-actions{
         display: flex;
         align-items: center;
+    }
+    .deletion-actions-btn{
+        margin: .5rem;
     }
 
 </style>

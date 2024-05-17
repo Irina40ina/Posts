@@ -115,7 +115,7 @@ export default {
     },
     methods: {
         createPost(data) {
-            this.posts.push({
+            this.posts.unshift({
                 userId: 1,
                 id: Date.now(),
                 title: data.title,

@@ -41,7 +41,7 @@ export default {
 .post {
     width: 100%;
     height: 130px;
-    border: var(--border);
+    border: 3px solid rgba(0, 128, 128, 0.522);;
     border-radius: 4px;
     display: flex;
     margin-top: 10px;
