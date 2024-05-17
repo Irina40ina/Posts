@@ -1,5 +1,6 @@
 <template>
     <div class="post-list">
+        <TransitionGroup name="list">
         <postComp 
         :post-data="post"
         v-for="post in $props.posts"
@@ -15,6 +16,7 @@
         >
             <AnOutlinedLoading class="circle"></AnOutlinedLoading>
         </div>
+        </TransitionGroup>
     </div>
 </template>
 
@@ -56,7 +58,6 @@ export default {
         };
         const callback = (entries) => {
             if(entries[0].isIntersecting === true && this.$props.posts.length > 0) {
-                console.log('work');
                 this.$emit('pageNext');
             }
             /* Content excerpted, show below */
@@ -72,6 +73,20 @@ export default {
 </script>
 
 <style scoped>
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+.list-leave-active {
+  position: absolute;
+}
+
 .post-list {
     width: 100%;
     height: 100%;

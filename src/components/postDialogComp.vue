@@ -1,4 +1,5 @@
 <template>
+    <Transition name="animation">
     <div 
     class="postDialog-container"
     v-show="$props.isShow"
@@ -44,14 +45,11 @@
             </div>
         </div>
     </div>
+    </Transition>
 </template>
 
 <script>
-import btnComp from '@/components/btnComp.vue';
 export default {
-    components: {
-        btnComp,
-    },
     emits: ['close'],
     props: {
         isShow: {
@@ -73,6 +71,15 @@ export default {
 </script>
 
 <style scoped>
+.animation-enter-active,
+.animation-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.animation-enter-from,
+.animation-leave-to {
+  opacity: 0;
+}
 .postDialog-container {
     position: fixed;
     display: flex;
@@ -97,7 +104,7 @@ export default {
 .postDialog {
     position: relative;
     width: 500px;
-    height: 50vh;
+    height: 70vh;
     background-color: white;
     box-shadow: var(--shadow);
     border-radius: 5px;

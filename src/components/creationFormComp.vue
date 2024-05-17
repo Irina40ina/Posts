@@ -1,5 +1,6 @@
 <template>
-    <div 
+   <Transition>
+   <div 
     class="creation-form__dialog" 
     v-if="$props.isShow" 
     @click="$emit('close')"
@@ -13,16 +14,17 @@
                 <h2 class="header-title">Создание поста</h2>
             </header>
             <div class="form-body">
-                <inputComp v-model="title" :placeholder="'Title'"></inputComp>
-                <inputComp v-model="body" :placeholder="'Body'"></inputComp>
+                <inputComp class="input-title" v-model="title" :placeholder="'Title'"></inputComp>
+                <textareaComp class="input-body" v-model="body" :placeholder="'Body'"></textareaComp>
             </div>
             <div class="form-actions">
                 <btnComp @click="handlerCreation" style="margin-right: 0.5rem;">Создать</btnComp>
-                <btnComp>Закрыть</btnComp>
+                <btnComp @click="$emit('close')">Закрыть</btnComp>
             </div>
 
         </form>
     </div>
+    </Transition>
 </template>
 
 <script>
@@ -48,6 +50,16 @@ export default {
 </script>
 
 <style scoped>
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
 .creation-form__dialog {
     position: fixed;
     display: flex;
@@ -70,18 +82,20 @@ export default {
 }
 .form-header{
     width: 100%;
-    height: 10%;
-    border: 1px solid black;
+    height: 15%;
+    background-color: rgb(57, 142, 142);
+    padding-top: 0.3rem;
     
 }
 .header-title{
     width: 100%;
     height: 10%;
+    text-align: center;
 }
 
 .form-body{
     width: 100%;
-    height: 80%;
+    height: 70%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -89,14 +103,24 @@ export default {
 
 }
 
+.input-title {
+    width: 50%;
+    height: 10%;
+    margin-bottom: 0.2rem;
+}
+
+.input-body {
+    width: 50%;
+    height: 70%;
+}
+
 .form-actions{
     width: 100%;
-    height: 10%;
+    height: 15%;
     display: flex;
     justify-content: flex-end;
     align-items: center; 
     padding: 0 1rem;
-    border: 1px solid black;
 }
 
 </style>

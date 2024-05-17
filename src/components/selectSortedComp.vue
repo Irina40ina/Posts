@@ -47,7 +47,9 @@ export default {
 
 <style scoped>
 .select-menu {
-    padding: .5rem;
+    padding: .3rem;
     font-size: 17px;
+    border: none;
+    border-bottom: 2.5px solid rgba(128, 128, 128, 0.329);
 }
 </style>
