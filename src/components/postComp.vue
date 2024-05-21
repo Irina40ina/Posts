@@ -9,8 +9,9 @@
             </p>
         </div>
         <div class="post-action">
+            <btnComp @click="handlerRouterPost" style="margin-bottom: 5px">Перейти</btnComp>
             <btnComp @click="handlerOpenDialog">Открыть</btnComp>
-            <btnComp @click="handlerDeleteDialog" style="margin-top: 10px">Удалить</btnComp>
+            <btnComp @click="handlerDeleteDialog" style="margin-top: 5px">Удалить</btnComp>
         </div>
     </div>
 </template>
@@ -31,7 +32,14 @@ export default {
         },
         handlerDeleteDialog() {
             this.$emit('openDeleteDialog', this.$props.postData);
-        }
+        },
+        handlerRouterPost() {
+            this.$router.push({ 
+                name: 'post', 
+                params: { id: this.$props.postData.id }, 
+                query: { is_load: true, limit: 10, page: 2 }, 
+            });
+        },
     },
 }
 </script>
