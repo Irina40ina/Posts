@@ -70,6 +70,8 @@
         </div>
         <paginationBlock 
         @select-page="loadingPageNext"
+        @page-back="pageBack"
+        @page-forward="pageForward"
         :page-number="page"
         :page-count="totalCountPage"
         :current-page="currentPage"
@@ -197,6 +199,30 @@ export default {
                 this.isShowUploadPosts = false;
             }
         },
+        async pageBack() {
+            try {
+                this.page = this.page -= 1;
+                this.currentPage = this.currentPage -=1;
+                const response = await getPosts(this.limit, this.page);
+                this.posts = response.data;
+            } catch (err) {
+                console.error(`App.vue: pageBack => ${err}`)
+            } finally {
+                this.isShowUploadPosts = false;
+            }
+        },
+        async pageForward() {
+            try {
+                this.page = this.page += 1;
+                this.currentPage = this.currentPage +=1;
+                const response = await getPosts(this.limit, this.page);
+                this.posts = response.data;
+            } catch (err) {
+                console.error(`App.vue: pageBack => ${err}`)
+            } finally {
+                this.isShowUploadPosts = false;
+            }
+        },
         async uploadPosts() {
             try {
                 this.isShowUploadPosts = true;
@@ -288,6 +314,7 @@ export default {
 .app {
     width: 100%;
     height: 100vh;
+    position: fixed;
     display: flex;
     flex-direction: column;
     justify-content: center;

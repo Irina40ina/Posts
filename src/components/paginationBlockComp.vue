@@ -3,6 +3,7 @@
         <!-- СТРЕКЛА ВЛЕВО -->
         <btnComp 
         class="pagination-btn"
+        @click="$emit('pageBack')"
         >{{ '<' }}</btnComp>
         
         <div 
@@ -18,6 +19,7 @@
         <!-- СТРЕКЛА ВПРАВО -->
         <btnComp 
         class="pagination-btn"
+        @click="$emit('pageForward')"
         >{{ '>' }}</btnComp>
     </div>
 </template>
@@ -46,7 +48,7 @@ export default {
             default: 1,
         }
     },
-    emits: ['selectPage'],
+    emits: ['selectPage', 'pageBack', 'pageForward'],
 }
 </script>
 
