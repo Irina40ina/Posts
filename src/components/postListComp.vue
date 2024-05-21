@@ -71,9 +71,8 @@ export default {
         };
         const callback = (entries) => {
             if(entries[0].isIntersecting === true && this.$props.posts.length > 0) {
-                this.$emit('pageNext');
+                // this.$emit('pageNext');
             }
-            /* Content excerpted, show below */
         };
         const observer = new IntersectionObserver(callback, options);
         observer.observe(this.$refs.triggerPagination);
@@ -102,7 +101,7 @@ export default {
 .post-list {
     width: 100%;
     height: 100%;
-    overflow: auto;
+    overflow-y: auto;
     padding: 1.2rem 2rem;
 }
 .triggerPagination {

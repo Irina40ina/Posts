@@ -22,13 +22,13 @@ async function getPosts(limit, page) {
                 'Content-Type': 'application/x-www-form-urlencoded',
             }
         });
-        return response.data;
+        let data = response.data;
+        let xTotalCount = +response.headers['x-total-count'];
+        return { data, xTotalCount };
     } catch (err) {
         console.error(`api/index.js: getPosts  => ${err}`);
     }
 }
-
-// https://jsonplaceholder.typicode.com/posts/1
 
 async function getPostById(id) {
     try {
