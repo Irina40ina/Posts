@@ -68,7 +68,7 @@ export default {
     async created() {
         try {
             this.isShowLoading = true;
-            const response = await getPostById(this.$route.params.id);
+            const response = await getPostById(this.$route.params.id); 
             this.id = response.id;
             this.userId = response.userId;
             this.title = response.title;

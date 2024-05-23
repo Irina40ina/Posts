@@ -75,7 +75,10 @@
         :page-number="page"
         :page-count="totalCountPage"
         :current-page="currentPage"
-        />
+        >
+            <router-link class="about-link" :to="{ name: 'about' }">О нашей компании</router-link>
+        </paginationBlock>
+
     </div>
 </template>
 
@@ -372,6 +375,12 @@ export default {
     color: rgba(128, 128, 128, 0.65);
 }
 
+.about-link {
+    position: absolute;
+    right: 30%;
+    font-size: 19px;
+    color:  teal;
+}
 
 .action-block {
     width: 20%;

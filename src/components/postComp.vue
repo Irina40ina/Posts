@@ -37,7 +37,6 @@ export default {
             this.$router.push({ 
                 name: 'post', 
                 params: { id: this.$props.postData.id }, 
-                query: { is_load: true, limit: 10, page: 2 }, 
             });
         },
     },

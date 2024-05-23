@@ -21,6 +21,8 @@
         class="pagination-btn"
         @click="$emit('pageForward')"
         >{{ '>' }}</btnComp>
+        
+        <slot></slot>
     </div>
 </template>
 
@@ -54,6 +56,7 @@ export default {
 
 <style scoped>
     .pagination-block {
+        position: relative;
         width: 100%;
         height: 5%;
         display: flex;
